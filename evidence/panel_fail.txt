@@ -3,5 +3,4 @@ $ go test ./...   # buggy tree + generated regression test
 --- FAIL: TestEvictRemovesLeastRecentlyUsed (0.00s)
     evict_lru_test.go:18: Get(/hot) = _, false after inserting /new; the most recently used entry was evicted, want /cold evicted instead
 FAIL
-FAIL	github.com/agent-omega-lab/linkcache	0.137s
-FAIL
+[… full output in the unabridged pipeline log …]
