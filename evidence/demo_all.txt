@@ -1,0 +1,63 @@
+# Deterministic execution of `python3 demo.py all` captured 2026-10-22 on the maintainer's machine (darwin arm64, go 1.25.6, python 3.14.4).
+# Reproduce locally: github.com/SillyZir/agent-omega-lab
+
+
+━━━ setup: fresh working checkout of target/  [DETERMINISTIC — executing for real on this machine]
+working checkout: <LAB>/.work/linkcache
+base sha: 11abb69cfc4d7f0554a0e193c3aed1e20c86413b
+
+━━━ bug localization (agent/agentic_session.py)  [RECORDED — replaying a real captured session (see recordings/)]
+predicted files: ['cache.go']   (captured 2026-10-21, 13.0s live)
+
+━━━ fix generation (agent/agentic_session.py)  [RECORDED — replaying a real captured session (see recordings/)]
+declared (captured 2026-10-21): {"done": true, "files": ["cache.go"], "summary": "Fixed evict() in cache.go to remove order[0] (the least-recently-used key) instead of the last element (the most-recently-used key).", "duration_s": 22.0}
+
+patch:
+diff --git a/cache.go b/cache.go
+index d4ad4f7..80f2426 100644
+--- a/cache.go
++++ b/cache.go
+@@ -58,8 +58,7 @@ func (c *Cache) evict() {
+ 	if len(c.order) == 0 {
+ 		return
+ 	}
+-	last := len(c.order) - 1
+-	victim := c.order[last]
+-	c.order = c.order[:last]
++	victim := c.order[0]
++	c.order = c.order[1:]
+ 	delete(c.data, victim)
+ }
+
+
+━━━ regression-test differential with the recorded model fix  [DETERMINISTIC — executing for real on this machine]
+on BASE (buggy) tree:    passed=False status=''  -> FAILS as required
+on PATCHED tree:         passed=True status=''  -> PASSES as required
+differential VERIFIED: the test isolates exactly this bug.
+
+━━━ independent judge x2 on the recorded patch (agent/judge.py)  [RECORDED — replaying a real captured session (see recordings/)]
+(captured 2026-10-21)
+judge pass 1: correct — The issue shows MRU entries (most recently touched) were being evicted, meaning the order slice keeps most-recent at the tail; switching eviction from the tail to the head removes the least-recently-used entry instead, which is the minimal fix for the root cause and passes the package tests.
+judge pass 2 (reads NEUTRALIZED issue text): correct — The bug was evicting from the recently-used end of the order list; switching eviction to the opposite end (index 0, the least-recently-used entry) is the minimal fix matching the reported symptom, and package tests pass.
+action: review
+
+━━━ the ship-gate wall (agent/autoship_gates.py — the REAL evaluate(), all 16 gates)  [DETERMINISTIC — executing for real on this machine]
+  PASS  breaker_armed            armed
+  PASS  daily_cap                0/2 used (own in-flight intent excluded)
+  PASS  concentration            remaining 2: default: limit 2 open PRs (third slot is operator-only with recorded justification; absolute ceiling 3); 0 open now (monitor state + ledger, incl. ships from today)
+  PASS  repo_autoship_allowed    no per-repo policy; auto-ship allowed
+  PASS  repo_path_fence          no per-repo auto-ship path fence
+  PASS  repo_required_labels     no per-repo label requirements
+  PASS  scope_single_subsystem   single package: .
+  PASS  judge_correct_twice      correct twice (pass 2 = re-sample on final artifact)
+  PASS  tests_pass               affected-package tests pass
+  PASS  validated_languages      every changed source file is go (the language executed)
+  PASS  testgen_generated        verified regression test generated
+  PASS  no_material_caveats      no hedges detected
+  PASS  content_lint             clean
+  PASS  injection_lint           clean
+  PASS  size_caps                2 files, 5 lines, 1 hunks
+  PASS  changelog_lint           clean
+gate wall verdict: SHIP PERMITTED
+
+demo complete: localized -> fixed -> differentially tested -> judged twice -> 16 gates -> ship permitted.
