@@ -4,7 +4,7 @@
 
 ━━━ setup: fresh working checkout of target/  [DETERMINISTIC — executing for real on this machine]
 working checkout: <LAB>/.work/linkcache
-base sha: 9d6e6cfd96da6d54a57ffe21ce63ecabab8904e2
+base sha: 08d4123f48d05e14408f2e44e7b6022d0b97d320
 
 ━━━ regression-test differential with the recorded model fix  [DETERMINISTIC — executing for real on this machine]
 on BASE (buggy) tree:    passed=False status=''  -> FAILS as required
