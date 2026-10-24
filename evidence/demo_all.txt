@@ -4,7 +4,7 @@
 
 ━━━ setup: fresh working checkout of target/  [DETERMINISTIC — executing for real on this machine]
 working checkout: <LAB>/.work/linkcache
-base sha: 241c5114848da30476927c8419814f0c1f9fdb44
+base sha: 7085f2d51de7a9b12b369864704efe86546a8ee8
 
 ━━━ bug localization (agent/agentic_session.py)  [RECORDED — replaying a real captured session (see recordings/)]
 predicted files: ['cache.go']   (captured 2026-10-21, 13.0s live)
