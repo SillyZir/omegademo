@@ -1,10 +1,10 @@
-# Deterministic execution of `python3 demo.py verify` captured 2026-10-25 on the maintainer's machine (darwin arm64, go 1.27.3, python 3.15.0).
+# Deterministic execution of `python3 demo.py verify` captured 2026-10-26 on the maintainer's machine (darwin arm64, go 1.27.3, python 3.15.0).
 # Reproduce locally: github.com/SillyZir/agent-omega-lab
 
 
 ━━━ setup: fresh working checkout of target/  [DETERMINISTIC — executing for real on this machine]
 working checkout: <LAB>/.work/linkcache
-base sha: 1dfd71cc43411fc75e11d8e3bcf179cfd7e0b026
+base sha: d58e7552796e93b29863de769ce23b5fc148b61c
 
 ━━━ regression-test differential with the recorded model fix  [DETERMINISTIC — executing for real on this machine]
 on BASE (buggy) tree:    passed=False status=''  -> FAILS as required
